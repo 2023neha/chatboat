@@ -1,15 +1,15 @@
-# 🛍️ ShopSmart AI - Intelligent E-Commerce Assistant
+#  ShopSmart AI - Intelligent E-Commerce Assistant
 
 ## Project Overview
 
 ShopSmart AI is an intelligent, conversational e-commerce shopping assistant that provides personalized product recommendations through an intuitive web interface. Leveraging advanced search algorithms and machine learning techniques, the application helps users discover products tailored to their preferences.
 
-### 🌟 Key Features
-- 💬 Conversational AI Interface
-- 🔍 Advanced Product Search
-- 🤖 Intelligent Recommendation Engine
-- 📊 Dynamic Product Filtering
-- 🌈 Mood-based Product Suggestions
+# Key Features
+-  Conversational AI Interface
+-  Advanced Product Search
+-  Intelligent Recommendation Engine
+-  Dynamic Product Filtering
+-  Mood-based Product Suggestions
 
 ## Technology Stack
 
@@ -182,15 +182,4 @@ python -m pytest tests/test_backend.py
 - CORS configuration
 - Environment-based configuration
 
-## License
-MIT License
 
-## Authors
-- Your Name <your.email@example.com>
-
-## Support
-For issues or questions, please open a GitHub issue.
-
----
-
-**Happy Smart Shopping! 🛒✨**
