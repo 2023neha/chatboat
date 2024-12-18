@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSmart AI</title>
+    <style>
+        /* Previous styles remain the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.4em;
+        }
+
+        .chat-header p {
+            font-size: 0.9em;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .bot {
+            margin-right: auto;
+        }
+
+        .bot .message-content {
+            background: #FFE4B5;
+            color: #333;
+        }
+
+        .user {
+            margin-left: auto;
+        }
+
+        .user .message-content {
+            background: #FFD700;
+            color: #333;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .product-price {
+            color: #FFA500;
+            font-weight: bold;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-reply {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .quick-reply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-input {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #FFD700;
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.95em;
+        }
+
+        .chat-input button {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-suggestion {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-image-placeholder {
+            width: 80px;
+            height: 80px;
+            background: #FFE4B5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFA500;
+            font-size: 24px;
+        }
+
+        .match-percentage {
+            background: #FFD700;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>ShopSmart AI</h2>
+            <p>Your Personal Shopping Assistant</p>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Describe what you're looking for..." id="userInput">
+            <button onclick="sendMessage()">↗</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        
+        // Product database simulation
+        const products = {
+            electronics: [
+                { name: "Smart Watch Pro", price: "$199", features: ["fitness tracking", "heart rate", "notifications"], matchScore: 95 },
+                { name: "Wireless Earbuds", price: "$149", features: ["noise cancelling", "waterproof", "long battery"], matchScore: 90 },
+                { name: "4K Smart TV", price: "$699", features: ["4K resolution", "smart features", "HDR"], matchScore: 88 }
+            ],
+            fashion: [
+                { name: "Classic Leather Jacket", price: "$199", features: ["genuine leather", "multiple colors", "all sizes"], matchScore: 92 },
+                { name: "Running Shoes", price: "$89", features: ["breathable", "cushioning", "lightweight"], matchScore: 87 }
+            ],
+            home: [
+                { name: "Smart Coffee Maker", price: "$129", features: ["programmable", "temperature control", "mobile app"], matchScore: 94 },
+                { name: "Robot Vacuum", price: "$299", features: ["automatic", "app control", "scheduling"], matchScore: 89 }
+            ]
+        };
+
+        // Initial greeting
+        setTimeout(() => {
+            addMessage("Hello! 👋 I'm ShopSmart AI, your personal shopping assistant!", 'bot');
+            addMessage("I can help you find the perfect products based on your preferences. Just describe what you're looking for!", 'bot');
+            addQuickReplies(['Electronics', 'Fashion', 'Home & Living']);
+        }, 500);
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addProductSuggestion(product) {
+            const suggestionDiv = document.createElement('div');
+            suggestionDiv.className = 'product-suggestion';
+            suggestionDiv.innerHTML = `
+                <div class="product-image-placeholder">🛍️</div>
+                <div class="product-details">
+                    <h3>${product.name}</h3>
+                    <p>${product.price}</p>
+                    <div class="match-percentage">${product.matchScore}% Match</div>
+                    <p><small>${product.features.join(" • ")}</small></p>
+                </div>
+            `;
+            chatMessages.appendChild(suggestionDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function analyzeUserInput(input) {
+            input = input.toLowerCase();
+            const keywords = {
+                electronics: ['phone', 'laptop', 'computer', 'gadget', 'smart', 'electronic', 'watch', 'earbuds', 'tv'],
+                fashion: ['clothes', 'shoes', 'jacket', 'fashion', 'wear', 'dress', 'outfit'],
+                home: ['furniture', 'home', 'kitchen', 'appliance', 'living', 'house', 'coffee', 'vacuum']
+            };
+
+            for (let category in keywords) {
+                if (keywords[category].some(keyword => input.includes(keyword))) {
+                    return category;
+                }
+            }
+            return 'general';
+        }
+
+        function addQuickReplies(replies) {
+            const quickRepliesDiv = document.createElement('div');
+            quickRepliesDiv.className = 'quick-replies';
+            replies.forEach(reply => {
+                const button = document.createElement('button');
+                button.className = 'quick-reply';
+                button.textContent = reply;
+                button.onclick = () => handleQuickReply(reply);
+                quickRepliesDiv.appendChild(button);
+            });
+            chatMessages.appendChild(quickRepliesDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleQuickReply(reply) {
+            addMessage(reply, 'user');
+            
+            // Remove previous quick replies
+            const quickReplies = document.querySelector('.quick-replies');
+            if (quickReplies) quickReplies.remove();
+
+            setTimeout(() => {
+                const category = reply.toLowerCase().split(' ')[0];
+                if (products[category]) {
+                    addMessage(`Here are my top recommendations in ${reply}, matched to common preferences:`, 'bot');
+                    products[category].forEach(product => {
+                        addProductSuggestion(product);
+                    });
+                    addQuickReplies(['Show More', 'Refine Search', 'Different Category']);
+                } else {
+                    addMessage("Let me help you find the perfect product. What specific features are you looking for?", 'bot');
+                    addQuickReplies(['Price Range', 'Features', 'Brands']);
+                }
+            }, 500);
+        }
+
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message) {
+                addMessage(message, 'user');
+                userInput.value = '';
+                
+                setTimeout(() => {
+                    const category = analyzeUserInput(message);
+                    if (category !== 'general') {
+                        addMessage(`Based on your description, I think these products would be perfect for you:`, 'bot');
+                        products[category].forEach(product => {
+                            addProductSuggestion(product);
+                        });
+                        addQuickReplies(['Show More', 'Refine Search', 'Different Category']);
+                    } else {
+                        addMessage("Could you tell me more about what you're looking for? For example, any specific features or price range?", 'bot');
+                        addQuickReplies(['Electronics', 'Fashion', 'Home & Living']);
+                    }
+                }, 500);
+            }
+        }
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
