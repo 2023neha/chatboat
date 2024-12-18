@@ -1,0 +1,24 @@
+flask==2.1.0
+flask-sqlalchemy==2.5.1
+flask-cors==3.0.10
+flask-migrate==3.1.0
+sqlalchemy==1.4.36
+python-dotenv==0.20.0
+faker==13.3.4
+werkzeug==2.1.2
+psycopg2-binary==2.9.3
+pytest==7.1.2
+gunicorn==20.1.0
+```
+
+Now, I'll create a .env.example file:
+
+<antArtifact identifier="env-example" type="application/vnd.ant.code" language="text" title="Environment Configuration Template">
+# Flask Configuration
+SECRET_KEY=your-super-secret-key
+DATABASE_URL=sqlite:///shopsmart.db
+JWT_SECRET_KEY=your-jwt-secret-key
+DEBUG=True
+
+# Optional PostgreSQL Configuration
+# DATABASE_URL=postgresql://username:password@localhost/shopsmart_db
